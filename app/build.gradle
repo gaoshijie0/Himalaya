@@ -22,7 +22,25 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'armeabi-v7a','x86_64','armeabi'
+            universalApk true
+        }
+    }
+//    defaultConfig {
+//        ndk {
+//            // 设置支持的SO库架构
+//            abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+//        }
+//    }
+
 }
+
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -31,10 +49,11 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.squareup.okhttp:okhttp:2.7.5'
-    implementation 'com.squareup.okio:okio:2.4.0'
+
     implementation files('libs\\TingPhoneOpenSDK_7.0.13.jar')
     implementation files('libs\\XmDownload_1.7.jar')
     implementation files('libs\\XmlyOAuth2SDK_V1.11.jar')
+    implementation 'com.google.code.gson:gson:2.8.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.squareup.okio:okio:1.15.0'
 }
