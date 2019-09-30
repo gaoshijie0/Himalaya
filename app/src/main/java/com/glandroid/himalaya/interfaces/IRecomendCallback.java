@@ -28,5 +28,21 @@ public interface IRecomendCallback {
      */
     void OnRefreshMore(List<Album> result);
 
+    /**
+     * 网络错误
+     */
+    void onNetWordError();
+
+    /**
+     * 数据为空
+     */
+    void onEmpty();
+
+    /**
+     * 正在加载
+     */
+    void onLoading();
+
+
 
 }

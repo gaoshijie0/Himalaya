@@ -1,9 +1,11 @@
 package com.glandroid.himalaya.base;
 
 import android.app.Application;
+import android.os.Handler;
 
 import com.ximalaya.ting.android.opensdk.constants.DTransferConstants;
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
+
 
 /**
  * @author Administrator
@@ -13,6 +15,9 @@ import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
  * @updateDes ${TODO}
  */
 public class BaseApplication extends Application {
+
+    private static Handler sHandler = null;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -39,7 +44,12 @@ public class BaseApplication extends Application {
 
 
         }
+        sHandler = new Handler();
 
 
+    }
+
+    public static Handler getHandler() {
+             return sHandler;
     }
 }
