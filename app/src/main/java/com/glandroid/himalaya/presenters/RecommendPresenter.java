@@ -102,6 +102,7 @@ public class RecommendPresenter implements IRecommendPresenter {
             } else {
                 //通知UI
                 for (IRecomendCallback callback : mCallbacks) {
+
                     callback.onRecommendListLoad(albumList);
                 }
             }

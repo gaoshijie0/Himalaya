@@ -1,5 +1,6 @@
 package com.glandroid.himalaya.fragments;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,10 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.glandroid.himalaya.DetailActivity;
 import com.glandroid.himalaya.R;
 import com.glandroid.himalaya.adapters.RecommendListAdapter;
 import com.glandroid.himalaya.base.BaseFragment;
 import com.glandroid.himalaya.interfaces.IRecomendCallback;
+import com.glandroid.himalaya.presenters.AlbumDetailPresenter;
 import com.glandroid.himalaya.presenters.RecommendPresenter;
 import com.glandroid.himalaya.views.UILoader;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
@@ -27,7 +30,7 @@ import java.util.List;
  * @updateAuthor $Author$
  * @updateDes ${TODO}
  */
-public class RecommendFragment extends BaseFragment implements IRecomendCallback, UILoader.OnRetryClickListener {
+public class RecommendFragment extends BaseFragment implements IRecomendCallback, UILoader.OnRetryClickListener, RecommendListAdapter.OnRecommendItemClickListener {
     private static final String TAG = "RecommendFragment";
     private RecyclerView mRecommendRv;
     private RecommendListAdapter mRecommendListAdapter;
@@ -83,6 +86,7 @@ public class RecommendFragment extends BaseFragment implements IRecomendCallback
             }
         });
         mRecommendListAdapter = new RecommendListAdapter();
+        mRecommendListAdapter.setOnRecommendItemClickListener(this);
         mRecommendRv.setAdapter(mRecommendListAdapter);
 
         return mRootView;
@@ -140,5 +144,13 @@ public class RecommendFragment extends BaseFragment implements IRecomendCallback
         if (mRecommendPresenter != null) {
             mRecommendPresenter.getRecommendList();
         }
+    }
+
+    @Override
+    public void onItemClick(int position,Album album) {
+        AlbumDetailPresenter.getInstance().setTargetAlbum(album);
+        //item 被点击了
+        Intent intent = new Intent(getContext(), DetailActivity.class);
+        startActivity(intent);
     }
 }

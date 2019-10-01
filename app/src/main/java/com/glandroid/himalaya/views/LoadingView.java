@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 import com.glandroid.himalaya.R;
 
@@ -16,7 +15,7 @@ import com.glandroid.himalaya.R;
  * @updateAuthor $Author$
  * @updateDes ${TODO}
  */
-public class LoadingView extends ImageView {
+public class LoadingView extends android.support.v7.widget.AppCompatImageView {
     //旋转的角度
     private int rotateDegree = 0;
     private boolean mNeedRotate = false;
