@@ -13,5 +13,8 @@ public class Constants {
     public final static int INDEX_HISTORY = 2;
     public final static int PAGE_COUNT = 3;
     //获取推荐列表专辑数量
-    public static int RECOOMEND_COUNT = 20;
+    public static int COUNT_RECOMMEND = 20;
+    //默认列表请求数量
+    public static int COUNT_DEFAULT = 50;
+
 }
