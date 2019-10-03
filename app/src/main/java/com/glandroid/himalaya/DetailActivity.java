@@ -1,5 +1,6 @@
 package com.glandroid.himalaya;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ import net.lucode.hackware.magicindicator.buildins.UIUtil;
 
 import java.util.List;
 
-public class DetailActivity extends BaseActivity implements IAlbumDetailViewCallback {
+public class DetailActivity extends BaseActivity implements IAlbumDetailViewCallback, DetailListAdapter.ItemClickListener {
 
     private AlbumDetailPresenter mAlbumDetailPresenter;
     private ImageView mLargeCover;
@@ -64,6 +65,7 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
         });
         //设置适配器
         mDetailListAdapter = new DetailListAdapter();
+        mDetailListAdapter.setOnItemClickListener(this);
         mDetailList.setAdapter(mDetailListAdapter);
 
     }
@@ -93,5 +95,12 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
         if (mSmallCover != null) {
             Picasso.with(this).load(album.getCoverUrlLarge()).into(mSmallCover );
         }
+    }
+
+    @Override
+    public void onItemClick(View itemView) {
+        //TODO跳转到播放页面
+        Intent intent = new Intent(this,PlayerActivity.class);
+        startActivity(intent);
     }
 }

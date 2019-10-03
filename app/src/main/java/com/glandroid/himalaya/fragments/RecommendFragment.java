@@ -134,7 +134,7 @@ public class RecommendFragment extends BaseFragment implements IRecomendCallback
     public void onDestroyView() {
         super.onDestroyView();
         if (mRecommendPresenter != null) {
-            mRecommendPresenter.unRegisterViewCallback(this);
+            mRecommendPresenter.unregisterViewCallback(this);
         }
     }
 

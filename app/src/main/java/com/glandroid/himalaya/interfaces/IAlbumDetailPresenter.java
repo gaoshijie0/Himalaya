@@ -1,5 +1,7 @@
 package com.glandroid.himalaya.interfaces;
 
+import com.glandroid.himalaya.base.IBasePresenter;
+
 /**
  * @author Administrator
  * @version $Rev$
@@ -7,7 +9,7 @@ package com.glandroid.himalaya.interfaces;
  * @updateAuthor $Author$
  * @updateDes ${TODO}
  */
-public interface IAlbumDetailPresenter {
+public interface IAlbumDetailPresenter extends IBasePresenter<IAlbumDetailViewCallback> {
 
     /**
      * 下拉刷新更多内容
@@ -24,15 +26,4 @@ public interface IAlbumDetailPresenter {
      */
     void getAlbumDetail(int albumId,int page);
 
-    /**
-     * 注册UI通知的接口
-     * @param detailViewCallback
-     */
-    void registerViewCallback(IAlbumDetailViewCallback detailViewCallback);
-
-    /**
-     * 删除Ui通知的接口
-     * @param detailViewCallback
-     */
-    void unregisterViewCallback(IAlbumDetailViewCallback detailViewCallback );
 }

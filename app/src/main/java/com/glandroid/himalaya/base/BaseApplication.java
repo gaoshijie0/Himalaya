@@ -1,10 +1,12 @@
 package com.glandroid.himalaya.base;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Handler;
 
 import com.ximalaya.ting.android.opensdk.constants.DTransferConstants;
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
+import com.ximalaya.ting.android.opensdk.player.XmPlayerManager;
 
 
 /**
@@ -15,6 +17,7 @@ import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
  * @updateDes ${TODO}
  */
 public class BaseApplication extends Application {
+    private static Context sContext = null;
 
     private static Handler sHandler = null;
 
@@ -44,9 +47,16 @@ public class BaseApplication extends Application {
 
 
         }
+        //初始化播放器
+        XmPlayerManager.getInstance(this).init();
+
         sHandler = new Handler();
+        sContext = getBaseContext();
 
 
+    }
+    public static  Context getApContext(){
+        return sContext;
     }
 
     public static Handler getHandler() {

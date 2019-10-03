@@ -1,5 +1,7 @@
 package com.glandroid.himalaya.interfaces;
 
+import com.glandroid.himalaya.base.IBasePresenter;
+
 /**
  * @author Administrator
  * @version $Rev$
@@ -7,7 +9,7 @@ package com.glandroid.himalaya.interfaces;
  * @updateAuthor $Author$
  * @updateDes ${TODO}
  */
-public interface IRecommendPresenter {
+public interface IRecommendPresenter extends IBasePresenter<IRecomendCallback> {
     /**
      * 获取推荐列表
      */
@@ -22,15 +24,5 @@ public interface IRecommendPresenter {
      * 加载更多
      */
     void lodeMore();
-    /**
-     * 用于注册UI的回调
-     * @param callback
-     */
-    void registerViewCallback(IRecomendCallback callback);
 
-    /**
-     * 取消注册
-     * @param callback
-     */
-    void unRegisterViewCallback(IRecomendCallback callback);
 }

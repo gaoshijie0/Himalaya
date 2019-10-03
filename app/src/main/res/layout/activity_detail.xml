@@ -123,7 +123,6 @@
         android:id="@+id/album_detail_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#fff4f4f4"
         android:layout_below="@+id/play_control_container"/>
 
 
