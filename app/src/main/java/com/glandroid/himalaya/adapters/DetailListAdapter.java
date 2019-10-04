@@ -36,7 +36,7 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DetailListAdapter.InnerHolder innerHolder, int position) {
+    public void onBindViewHolder(@NonNull DetailListAdapter.InnerHolder innerHolder, final int position) {
            View itemView = innerHolder.itemView;
         TextView orderView = itemView.findViewById(R.id.order_text);
         TextView titleTV = itemView.findViewById(R.id.detail_item_title);
@@ -61,7 +61,7 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
                 //条目的点击事件
                 if (mItemClicklistener != null) {
 
-                    mItemClicklistener.onItemClick(view);
+                    mItemClicklistener.onItemClick(mDetailData,position);
                 }
             }
         });
@@ -91,6 +91,7 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.In
         this.mItemClicklistener =  listener;
     }
     public interface ItemClickListener{
-        void onItemClick(View itemView);
+
+        void onItemClick(List<Track> detailData, int position);
     }
 }

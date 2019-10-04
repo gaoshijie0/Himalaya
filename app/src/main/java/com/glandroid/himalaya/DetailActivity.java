@@ -15,6 +15,7 @@ import com.glandroid.himalaya.adapters.DetailListAdapter;
 import com.glandroid.himalaya.base.BaseActivity;
 import com.glandroid.himalaya.interfaces.IAlbumDetailViewCallback;
 import com.glandroid.himalaya.presenters.AlbumDetailPresenter;
+import com.glandroid.himalaya.presenters.PlayerPresenter;
 import com.glandroid.himalaya.views.RoundImageView;
 import com.squareup.picasso.Picasso;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
@@ -46,7 +47,7 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
 
     }
 
-    private void initView() {
+    private void  initView() {
         mLargeCover = this.findViewById(R.id.iv_large_color);
         mSmallCover = this.findViewById(R.id.riv_small_color);
         mAlbumTitle = this.findViewById(R.id.tv_album_titile);
@@ -97,8 +98,12 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
         }
     }
 
+
     @Override
-    public void onItemClick(View itemView) {
+    public void onItemClick(List<Track> detailData, int position) {
+        //设置播放器数据
+        PlayerPresenter playerPresenter = PlayerPresenter.getPlayerPresenter();
+        playerPresenter.setPlayList(detailData,position);
         //TODO跳转到播放页面
         Intent intent = new Intent(this,PlayerActivity.class);
         startActivity(intent);
