@@ -12,6 +12,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginRight="20dp"
+        android:layout_centerHorizontal="true"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="2"
@@ -19,12 +20,12 @@
         android:textSize="20sp"/>
 
     <android.support.v4.view.ViewPager
+        android:id="@+id/track_pager_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/track_title"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="100dp"
-        android:background="#ff00ff"/>
+        android:layout_marginBottom="100dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -86,6 +87,7 @@
                 android:layout_weight="1"/>
 
             <ImageView
+                android:id="@+id/play_pre"
                 android:layout_width="0dp"
                 android:layout_height="20dp"
                 android:src="@mipmap/previous"
@@ -99,6 +101,7 @@
                 android:layout_weight="1"/>
 
             <ImageView
+                android:id="@+id/play_next"
                 android:layout_width="0dp"
                 android:layout_height="20dp"
                 android:src="@mipmap/next_press"

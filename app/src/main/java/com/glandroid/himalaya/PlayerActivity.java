@@ -1,21 +1,27 @@
 package com.glandroid.himalaya;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.glandroid.himalaya.adapters.PlayTrackPagerAdapter;
 import com.glandroid.himalaya.interfaces.IPlayerCallback;
 import com.glandroid.himalaya.presenters.PlayerPresenter;
+import com.glandroid.himalaya.utils.LogUtil;
 import com.ximalaya.ting.android.opensdk.model.track.Track;
 import com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class PlayerActivity extends AppCompatActivity implements IPlayerCallback {
+public class PlayerActivity extends AppCompatActivity implements IPlayerCallback, ViewPager.OnPageChangeListener {
 
     private static final String TAG = "PlayerActivity";
     private ImageView mControlBtn;
@@ -27,6 +33,13 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
     private SeekBar mDurationBar;
     private int mCurrentProgress = 0;
     private boolean mIsUserTouchProgressBar = false;
+    private ImageView mPlayPreBtn;
+    private ImageView mPlayNextBtn;
+    private TextView mTrackTitleTV;
+    private String mMTrackTitleText;
+    private ViewPager mTrackPagerView;
+    private PlayTrackPagerAdapter mTrackPagerAdapter;
+    private boolean mIsUserSlidePager = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +48,11 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
         //TODO:测试播放
         mPlayerPresenter = PlayerPresenter.getPlayerPresenter();
         mPlayerPresenter.registerViewCallback(this);
-//        playerPresenter.play();
+        //        playerPresenter.play();
         initView();
         intEvent();
-        startPlay();
+        //在界面初始化后才能获取数据
+        mPlayerPresenter.getPlayList();
     }
 
     @Override
@@ -50,16 +64,8 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
         }
     }
 
-    /**
-     * 开始播放
-     */
-    private void startPlay() {
-        if (mPlayerPresenter != null) {
 
-            mPlayerPresenter.play();
-        }
-    }
-
+    @SuppressLint("ClickableViewAccessibility")
     private void intEvent() {
         mControlBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +73,7 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
                 //如果现在的状态是播放的就暂停
                 if (mPlayerPresenter.isPlay()) {
                     mPlayerPresenter.pause();
-                }else{
+                } else {
                     //如果现在的状态是暂停的就让播放器播放
                     mPlayerPresenter.play();
                 }
@@ -92,8 +98,41 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 mIsUserTouchProgressBar = false;
-            //手离开拖动进度条更新
+                //手离开拖动进度条更新
                 mPlayerPresenter.seekTo(mCurrentProgress);
+            }
+        });
+
+        mPlayPreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO:播放前一首
+                if (mPlayerPresenter != null) {
+                    mPlayerPresenter.playPre();
+                }
+            }
+        });
+
+        mPlayNextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO:播放下一首
+                if (mPlayerPresenter != null) {
+                    mPlayerPresenter.playnext();
+                }
+            }
+        });
+        mTrackPagerView.addOnPageChangeListener(this);
+        mTrackPagerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                int action = motionEvent.getAction();
+                switch (action){
+                  case  MotionEvent.ACTION_DOWN:
+                      mIsUserSlidePager = true;
+                    break;
+                }
+                return false;
             }
         });
     }
@@ -101,8 +140,18 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
     private void initView() {
         mControlBtn = this.findViewById(R.id.play_or_pause_btn);
         mTotalDuraton = this.findViewById(R.id.track_duration);
-        mCurrentPositon = this. findViewById(R.id.current_position);
+        mCurrentPositon = this.findViewById(R.id.current_position);
         mDurationBar = this.findViewById(R.id.track_seek_bar);
+        mPlayPreBtn = this.findViewById(R.id.play_pre);
+        mPlayNextBtn = this.findViewById(R.id.play_next);
+        mTrackTitleTV = this.findViewById(R.id.track_title);
+        if (!TextUtils.isEmpty(mMTrackTitleText)) {
+            mTrackTitleTV.setText(mMTrackTitleText);
+        }
+        mTrackPagerView = this.findViewById(R.id.track_pager_view);
+        mTrackPagerAdapter = new PlayTrackPagerAdapter();
+        mTrackPagerView.setAdapter(mTrackPagerAdapter);
+
     }
 
     @Override
@@ -151,6 +200,11 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
 
     @Override
     public void onListLoaded(List<Track> list) {
+        LogUtil.d(TAG, "list------->" + list);
+        if (mTrackPagerAdapter != null) {
+
+            mTrackPagerAdapter.setData(list);
+        }
 
     }
 
@@ -164,11 +218,11 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
         mDurationBar.setMax(total);
         String totalDuration;
         String currentDuratoin;
-        if (total>1000*60*60) {
+        if (total > 1000 * 60 * 60) {
             totalDuration = mHourFarmat.format(total);
             currentDuratoin = mHourFarmat.format(currentDuration);
 
-        }else{
+        } else {
             totalDuration = mMinFormat.format(total);
             currentDuratoin = mMinFormat.format(currentDuration);
         }
@@ -197,6 +251,40 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
 
     @Override
     public void onAdFinished() {
+
+    }
+
+    @Override
+    public void onTrackUpdate(Track track , int playIndex) {
+        mMTrackTitleText = track.getTrackTitle();
+        if (mTrackTitleTV != null) {
+            //设置当前节目的标题
+            mTrackTitleTV.setText(mMTrackTitleText);
+        }
+        //当前节目更改的时候，我们获取当前播放位置
+        //d当前的节目改变时要修改图片
+        if (mTrackPagerView != null) {
+            mTrackPagerView.setCurrentItem(playIndex);
+        }
+    }
+
+    @Override
+    public void onPageScrolled(int i, float v, int i1) {
+
+    }
+
+    @Override
+    public void onPageSelected(int positon) {
+        //当页面选中的时候就去切换播放内容
+        if (mPlayerPresenter != null && mIsUserSlidePager) {
+
+            mPlayerPresenter.playByIndex(positon);
+        }
+        mIsUserSlidePager = false;
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int i) {
 
     }
 }
