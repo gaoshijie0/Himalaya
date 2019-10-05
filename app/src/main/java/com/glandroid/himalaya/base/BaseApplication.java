@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 
+import com.glandroid.himalaya.utils.LogUtil;
 import com.ximalaya.ting.android.opensdk.constants.DTransferConstants;
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
 import com.ximalaya.ting.android.opensdk.player.XmPlayerManager;
@@ -52,6 +53,8 @@ public class BaseApplication extends Application {
 
         sHandler = new Handler();
         sContext = getBaseContext();
+
+        LogUtil.init(this.getPackageName(), false);
 
 
     }

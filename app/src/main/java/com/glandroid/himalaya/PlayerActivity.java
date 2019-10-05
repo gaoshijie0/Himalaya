@@ -183,7 +183,7 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
 
         //更新进度
         //计算当前的进度
-        if (mIsUserTouchProgressBar) {
+        if (!mIsUserTouchProgressBar) {
 
             mDurationBar.setProgress(currentDuration);
         }

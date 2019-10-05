@@ -3,6 +3,7 @@ package com.glandroid.himalaya;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +17,10 @@ import com.glandroid.himalaya.base.BaseActivity;
 import com.glandroid.himalaya.interfaces.IAlbumDetailViewCallback;
 import com.glandroid.himalaya.presenters.AlbumDetailPresenter;
 import com.glandroid.himalaya.presenters.PlayerPresenter;
+import com.glandroid.himalaya.utils.LogUtil;
+import com.glandroid.himalaya.views.ImageBlur;
 import com.glandroid.himalaya.views.RoundImageView;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
 import com.ximalaya.ting.android.opensdk.model.track.Track;
@@ -27,6 +31,7 @@ import java.util.List;
 
 public class DetailActivity extends BaseActivity implements IAlbumDetailViewCallback, DetailListAdapter.ItemClickListener {
 
+    private static final String TAG = "DetailActivity";
     private AlbumDetailPresenter mAlbumDetailPresenter;
     private ImageView mLargeCover;
     private RoundImageView mSmallCover;
@@ -48,6 +53,7 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
     }
 
     private void  initView() {
+        LogUtil.d(TAG,"测试一下，哈哈哈哈哈");
         mLargeCover = this.findViewById(R.id.iv_large_color);
         mSmallCover = this.findViewById(R.id.riv_small_color);
         mAlbumTitle = this.findViewById(R.id.tv_album_titile);
@@ -91,7 +97,26 @@ public class DetailActivity extends BaseActivity implements IAlbumDetailViewCall
             mAlbumAuthor.setText(album.getAnnouncer().getNickname());
         }
         if (mLargeCover != null) {
-            Picasso.with(this).load(album.getCoverUrlLarge()).into(mLargeCover);
+            if (mLargeCover != null) {
+
+                Picasso.with(this).load(album.getCoverUrlLarge()).into(mLargeCover, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Drawable drawable = mLargeCover.getDrawable();
+                        if (drawable != null) {
+                            ImageBlur.makeBlur(mLargeCover,DetailActivity.this);
+                        }
+
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
+            }
+
+
         }
         if (mSmallCover != null) {
             Picasso.with(this).load(album.getCoverUrlLarge()).into(mSmallCover );
