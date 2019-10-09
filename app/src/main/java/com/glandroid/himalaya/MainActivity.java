@@ -41,7 +41,7 @@ public class MainActivity extends FragmentActivity {
 
     private void iniview() {
         mMagicIndicator = findViewById(R.id.main_indicator);
-        mMagicIndicator.setBackgroundColor(getResources().getColor(R.color.main_color));
+        mMagicIndicator.setBackgroundColor(getResources().getColor(R.color.second_color));
         //创建Indicator适配器
         mIndicatorAdapter = new IndicatorAdapter(this);
         CommonNavigator commonNavigator = new CommonNavigator(this);

@@ -84,7 +84,7 @@
                 android:id="@+id/player_mode_switch_btn"
                 android:layout_width="0dp"
                 android:layout_height="20dp"
-                android:src="@mipmap/sort_decending"
+                android:src="@mipmap/play_mode_list_order"
                 android:layout_weight="1"/>
 
             <ImageView

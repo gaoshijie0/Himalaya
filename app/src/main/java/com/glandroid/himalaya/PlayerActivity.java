@@ -201,13 +201,7 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
         mPlayerSwitchModeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //根据当前的MODEl获取下一个mode
-                XmPlayListControl.PlayMode playMode = sPlayModeRule.get(mCurrentMode);
-                //修改播放模式
-                if (mPlayerPresenter != null) {
-                    mPlayerPresenter.switchPlayMode(playMode);
-
-                }
+                switchPlayMode();
 
 
             }
@@ -228,6 +222,32 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
                mOutBgAnimator.start();
             }
         });
+        mSobPopWindow.setPlayListItemClickListener(new SobPopWindow.PlayListItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                //播放列表里的Item被点击了
+                if (mPlayerPresenter != null) {
+                    mPlayerPresenter.playByIndex(position);
+                }
+            }
+        });
+        mSobPopWindow.setPlayListPlayModeClickListener(new SobPopWindow.PlayListPlayModeClickListener() {
+            @Override
+            public void onPlayModeClick() {
+                //切换播放模式
+                switchPlayMode();
+            }
+        });
+    }
+
+    private void switchPlayMode() {
+        //根据当前的MODEl获取下一个mode
+        XmPlayListControl.PlayMode playMode = sPlayModeRule.get(mCurrentMode);
+        //修改播放模式
+        if (mPlayerPresenter != null) {
+            mPlayerPresenter.switchPlayMode(playMode);
+
+        }
     }
 
     private void updateBgAlpha(float alpha) {
@@ -245,10 +265,10 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
      * PLAY_MODEL_SINGLE_LOOP
      */
     private void updatePlayModeBtnImg() {
-        int resId = R.mipmap.sort_decending;
+        int resId = R.mipmap.play_mode_list_order;
         switch (mCurrentMode) {
             case PLAY_MODEL_LIST:
-                resId = R.mipmap.sort_decending;
+                resId = R.mipmap.play_mode_list_order;
                 break;
             case PLAY_MODEL_RANDOM:
                 resId = R.mipmap.play_mode_random;
@@ -337,6 +357,10 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
 
             mTrackPagerAdapter.setData(list);
         }
+        //数据回来之后也要给播放列表一份,要判空
+        if (mSobPopWindow != null) {
+            mSobPopWindow.setListData(list);
+        }
 
     }
 
@@ -344,6 +368,7 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
     public void onPlayModeChange(XmPlayListControl.PlayMode playMode) {
         //更换播放模式并修改UI
         mCurrentMode = playMode;
+        mSobPopWindow.updatePlayMode(mCurrentMode);
         updatePlayModeBtnImg();
 
     }
@@ -399,8 +424,13 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
         //当前节目更改的时候，我们获取当前播放位置
         //d当前的节目改变时要修改图片
         if (mTrackPagerView != null) {
-            mTrackPagerView.setCurrentItem(playIndex);
+            mTrackPagerView.setCurrentItem(playIndex,true);
         }
+        //修改播放里的播放位置
+        if (mSobPopWindow != null) {
+            mSobPopWindow.setCurrentPlayPosition(playIndex);
+        }
+
     }
 
     @Override
