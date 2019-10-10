@@ -35,7 +35,10 @@ public class SobPopWindow extends PopupWindow {
     private TextView mMPlayModeTv;
     private ImageView mMPlayModeiv;
     private View mPlayModeContainer;
-    private PlayListPlayModeClickListener mPlayModeClickListener = null;
+    private PlayListActionListener mPlayModeClickListener = null;
+    private View mOrderBtnContainer;
+    private ImageView mOrderIcon;
+    private TextView mOrderText;
 
     public SobPopWindow() {
         //设置宽高
@@ -72,6 +75,13 @@ public class SobPopWindow extends PopupWindow {
                 }
             }
         });
+        mOrderBtnContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO:切换播放列表为顺序或者逆序
+                mPlayModeClickListener.onOrderClick();
+            }
+        });
     }
 
     private void initView() {
@@ -86,6 +96,9 @@ public class SobPopWindow extends PopupWindow {
         mMPlayModeTv = mPopView.findViewById(R.id.play_list_play_mode_tv);
         mMPlayModeiv = mPopView.findViewById(R.id.play_list_play_mode_iv);
         mPlayModeContainer = mPopView.findViewById(R.id.play_list_play_mode_container);
+        mOrderBtnContainer = mPopView.findViewById(R.id.play_list_order_container);
+        mOrderIcon = mPopView.findViewById(R.id.play_list_order_iv);
+        mOrderText = mPopView.findViewById(R.id.play_list_order_tv);
 
 
     }
@@ -120,6 +133,11 @@ public class SobPopWindow extends PopupWindow {
      */
     public void updatePlayMode(XmPlayListControl.PlayMode currentMode) {
         updatePlayModeBtnImg(currentMode);
+    }
+//更新切換列表順序和逆序按鈕和文字
+    public void updatePlayIcon(boolean isOrder){
+       mOrderIcon.setImageResource(isOrder?R.mipmap.play_mode_list_order:R.mipmap.play_mode_list_rever);
+       mOrderText.setText(BaseApplication.getApContext().getResources().getString(isOrder?R.string.order_text:R.string.revers_text));
     }
 
     /**
@@ -161,13 +179,16 @@ public class SobPopWindow extends PopupWindow {
         void onItemClick(int position);
     }
 
-    public void setPlayListPlayModeClickListener(PlayListPlayModeClickListener playModeListener){
+    public void setPlayListActionListener(PlayListActionListener playModeListener){
         mPlayModeClickListener = playModeListener;
 
     }
 
-    public interface  PlayListPlayModeClickListener{
+    public interface  PlayListActionListener{
+        //播放模式被点击了
         void onPlayModeClick();
+        //播放顺序或者逆序按钮被点击了
+        void onOrderClick();
     }
 
 }

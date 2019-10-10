@@ -9,4 +9,8 @@
     <string name="play_mode_random_text">随机播放</string>
     <string name="play_mode_list_play_text">列表循环</string>
     <string name="play_mode_single_loop_text">单曲循环</string>
+    <string name="order_text">順序</string>
+    <string name="revers_text">逆序</string>
+    <string name="playing_text">正在播放</string>
+    <string name="pause_text">已暂停</string>
 </resources>

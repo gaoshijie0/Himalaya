@@ -133,7 +133,7 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
             @Override
             public void onClick(View view) {
                 //如果现在的状态是播放的就暂停
-                if (mPlayerPresenter.isPlay()) {
+                if (mPlayerPresenter.isplaying()) {
                     mPlayerPresenter.pause();
                 } else {
                     //如果现在的状态是暂停的就让播放器播放
@@ -231,14 +231,26 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
                 }
             }
         });
-        mSobPopWindow.setPlayListPlayModeClickListener(new SobPopWindow.PlayListPlayModeClickListener() {
+        mSobPopWindow.setPlayListActionListener(new SobPopWindow.PlayListActionListener() {
             @Override
             public void onPlayModeClick() {
                 //切换播放模式
                 switchPlayMode();
             }
+
+            @Override
+            public void onOrderClick() {
+                 //点击了切换顺序和逆序
+             //   Toast.makeText(PlayerActivity.this,"切换列表顺序",Toast.LENGTH_SHORT).show();
+                if (mPlayerPresenter != null) {
+                    mPlayerPresenter.reversPlayList();
+                }
+//                mSobPopWindow.updatePlayIcon(!textOrder);
+//                textOrder = !textOrder;
+            }
         });
     }
+    private boolean textOrder = false;
 
     private void switchPlayMode() {
         //根据当前的MODEl获取下一个mode
@@ -430,6 +442,13 @@ public class PlayerActivity extends AppCompatActivity implements IPlayerCallback
         if (mSobPopWindow != null) {
             mSobPopWindow.setCurrentPlayPosition(playIndex);
         }
+
+    }
+
+    @Override
+    public void updateListOrder(boolean isReverse) {
+
+        mSobPopWindow.updatePlayIcon(isReverse);
 
     }
 
