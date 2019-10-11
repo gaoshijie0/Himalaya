@@ -24,4 +24,9 @@ public interface IAlbumDetailViewCallback {
      * @param album
      */
     void onAlbumLoaded(Album album);
+
+    /**
+     * 网络错误
+     */
+    void onNetWorkError(int errorCode, String errorMsg);
 }

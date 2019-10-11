@@ -25,7 +25,6 @@ public abstract class UILoader extends FrameLayout {
     private View mNetWorkErroeView;
     private View mEmptyView;
     private OnRetryClickListener mOnRetryClickListener = null;
-    private OnRetryClickListener mOnRetryClickListener1;
 
     public enum UIStatus{
         LOADING,SUCCESS,NET_ERROR,EMPTY,NONE
@@ -118,7 +117,7 @@ public abstract class UILoader extends FrameLayout {
     }
 
     public void setOnRetryClickListener(OnRetryClickListener onRetryClickListener){
-        this.mOnRetryClickListener1 = onRetryClickListener;
+        this.mOnRetryClickListener = onRetryClickListener;
     }
     public interface OnRetryClickListener{
        void onRetryClick();
