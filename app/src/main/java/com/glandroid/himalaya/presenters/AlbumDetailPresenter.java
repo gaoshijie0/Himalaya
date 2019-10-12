@@ -28,7 +28,13 @@ import java.util.Map;
 public class AlbumDetailPresenter implements IAlbumDetailPresenter {
     private static final String TAG = "AlbumDetailPresenter";
     private List<IAlbumDetailViewCallback> mCallbacks = new ArrayList<>();
+
+    private List<Track> mTracks  = new ArrayList<>();
     private Album mTargetAlbum = null;
+    //当前的专辑ID
+    private int mCurrentAlbumId = -1;
+    //当前页
+    private int mcurrentPageIndex = 0;
 
     private AlbumDetailPresenter() {
     }
@@ -54,32 +60,66 @@ public class AlbumDetailPresenter implements IAlbumDetailPresenter {
 
     @Override
     public void lodeMore() {
+        //去加载更多内容
+        mcurrentPageIndex++;
+        //传入true,表示结果会追加到结果后方
+        doLoaded(true);
 
     }
-
-    @Override
-    public void getAlbumDetail(int albumId, int page) {
-        //根据页码和专辑ID获取列表
-        Map<String, String> map = new HashMap<String, String>();
-        map.put(DTransferConstants.ALBUM_ID, albumId + "");
+    private void doLoaded(final boolean isLoaderMore){
+        Map<String, String> map = new HashMap<>();
         map.put(DTransferConstants.SORT, "asc");
-        map.put(DTransferConstants.PAGE, page + "");
+        map.put(DTransferConstants.ALBUM_ID, mCurrentAlbumId+"");
+        map.put(DTransferConstants.PAGE, mcurrentPageIndex + "");
         map.put(DTransferConstants.PAGE_SIZE, Constants.COUNT_DEFAULT + "");
         CommonRequest.getTracks(map, new IDataCallBack<TrackList>() {
             @Override
             public void onSuccess(@Nullable TrackList trackList) {
                 if (trackList != null) {
-                    List tracks = trackList.getTracks();
+                    List<Track> tracks = trackList.getTracks();
                     Log.v(TAG,"tracks size------>" +tracks.size());
-                    handlerAlbumDetailResult(tracks);
+                    if (isLoaderMore) {
+                    //TODO:上拉加载，结果放到后面去
+                        mTracks.addAll(tracks);
+                        int size = tracks.size();
+                        handleLoadMoreResult(size);
+
+                    }else{
+                        //TODO:下拉加载，结果放到前面去
+                        mTracks.addAll(0,tracks);
+                    }
+                    //TODO：就因为把mTrakcs写成tracks导致莫名其妙的错误！！！！
+                    handlerAlbumDetailResult(mTracks);
                 }
             }
 
             @Override
             public void onError(int errorCode, String errorMsg) {
-              handleError(errorCode,errorMsg);
+                if (isLoaderMore) {
+                    mcurrentPageIndex--;
+                }
+                handleError(errorCode,errorMsg);
             }
         });
+    }
+
+    /**
+     * 处理加载更多的结果
+     * @param size
+     */
+    private void handleLoadMoreResult(int size) {
+        for (IAlbumDetailViewCallback callback : mCallbacks) {
+            callback.onLoaderMoreFinished(size);
+        }
+    }
+
+    @Override
+    public void getAlbumDetail(int albumId, int page) {
+        mTracks.clear();
+        this.mCurrentAlbumId = albumId;
+        this.mcurrentPageIndex = page;
+        //根据页码和专辑ID获取列表
+        doLoaded(false);
 
 
     }
